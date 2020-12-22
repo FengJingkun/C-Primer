@@ -8,9 +8,9 @@ priority_queue原型如下：
 #include <queue>
 
 template<class T, // element type
-		class Container = std::vector<T>, // container type
-		class Compare = std::less<typename Container::value_type> // compare function obj
-> class priority_queue;
+         class Container = std::vector<T>, // container type
+         class Compare = std::less<typename Container::value_type> > // compare function obj
+class priority_queue;
 ```
 
 priority_queue的底层容器默认为vector，比较函数默认为less。**此时priority_queue默认形成大顶堆**。
