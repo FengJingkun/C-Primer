@@ -1,4 +1,4 @@
-### priority_queue优先级队列
+priority_queue优先级队列
 
 priority_queue是一个容器适配器。与queue类似，仅允许在尾部插入元素push，在首部取出元素pop，只不过内部元素具有优先级，pop时根据接收的compare函数对象决定输出顺序。
 
@@ -59,9 +59,82 @@ void push_heap(Iterator first,     // 随机访问迭代器
 
 根据上述源码可以看出，传入compare函数对象是为了比较新节点与父节点间的大小，返回true则交换两元素的位置。
 
-<br>
-
-### 结论
-
 - **传入less，当父节点小于子节点时返回true，此时进行交换，值更大的节点排在前面，所以会形成大顶堆。**
 - **传入greater，当父节点大于子节点时返回true，此时进行交换，值更小的节点排在前面，所以会形成小顶堆。**
+
+<br>
+
+### 自定义比较函数
+
+基本数据类型的比较函数使用greater或less即可。对于自定义类型，则需要定义相应的比较函数。
+
+**运算符重载**
+
+```c++
+struct Node {
+    int id;
+    int value;
+};
+
+bool operator< (const Node& a, const Node& b) {
+    return a.value < b.value;
+}
+
+priority_queue<Node> que; // 默认使用less, 大顶堆
+```
+
+这里需要注意的是，若重载operator>，则无法通过编译：
+
+```c++
+bool operator> (const Node& a, const Node& b) {
+    return a.value > b.value;
+}
+
+priority_queue<Node> que; // compile error.
+```
+
+priority_queue默认使用less，less中使用的是运算符<，因此仅重载运算符>会出现错误。
+
+<br>
+
+**自定义仿函数**
+
+```c++
+struct cmp {
+    bool operator() (const Node& a, const Node& b) {
+        return a.value < b.value;
+    }
+};
+
+priority_queue<Node, vector<Node>, cmp> heap;
+```
+
+<br>
+
+**类成员函数重载**
+
+```c++
+bool Node::operator< (const Node& other) const {
+	return this->value < other.value;    
+}
+```
+
+<br>
+
+**友元函数重载**
+
+与普通重载函数相比，友元函数重载可以访问类的非公有成员
+
+```c++
+struct Node {
+    friend bool operator< (const Node&, const Node&);
+    int id;
+private:
+    int value;
+};
+
+bool operator< (const Node& a, const Node& b) {
+    return a.value < b.value; // 访问Node的私有成员
+}
+```
+
