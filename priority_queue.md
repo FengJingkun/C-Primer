@@ -1,4 +1,4 @@
-priority_queue优先级队列
+### priority_queue优先级队列
 
 priority_queue是一个容器适配器。与queue类似，仅允许在尾部插入元素push，在首部取出元素pop，只不过内部元素具有优先级，pop时根据接收的compare函数对象决定输出顺序。
 
